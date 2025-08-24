@@ -1575,6 +1575,11 @@ VALUES(' . $last_id . ', ' . (int) $idShop . ')');
 
         $indexedProducts = 0;
         $length = 100;
+
+        //TODO <cnc-notice>
+        $iterationCount = 0;
+        /////////////////
+
         do {
             $lastCursor = $cursor;
             $cursor = (int) $this->indexPricesUnbreakable((int) $cursor, $full, $smart, $length);
@@ -1584,6 +1589,11 @@ VALUES(' . $last_id . ', ' . (int) $idShop . ')');
             }
             $time_elapsed = microtime(true) - $startTime;
             $indexedProducts += $length;
+            //TODO <cnc-notice>
+            $iterationCount ++;
+
+            echo "Iteration count: " . $iterationCount . "<br/>";
+            /////////////////
         } while (
             $cursor < $nbProducts
             && (Tools::getMemoryLimit() == -1 || Tools::getMemoryLimit() > memory_get_peak_usage())
@@ -1767,7 +1777,7 @@ VALUES(' . $last_id . ', ' . (int) $idShop . ')');
 
         $count = Db::getInstance()->getValue($sql);
 
-        if ($count < 100) {
+        if ($count < 200) {
             $this->createProducts();
         }
     }
@@ -1778,7 +1788,7 @@ VALUES(' . $last_id . ', ' . (int) $idShop . ')');
         $categoryID = Configuration::get('PS_HOME_CATEGORY');
         Db::getInstance()->execute('ALTER TABLE ' . _DB_PREFIX_ . 'product AUTO_INCREMENT = 10000');
 
-        for ($count = 1; $count <= 100; $count++) {
+        for ($count = 1; $count <= 200; $count++) {
             $product = new Product();
             $product->active = 1;
             $product->name = [];

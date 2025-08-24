@@ -1586,6 +1586,9 @@ VALUES(' . $last_id . ', ' . (int) $idShop . ')');
 
         $indexedProducts = 0;
         $length = 100;
+        //TODO <cnc-notice>
+        $iterationCount = 0;
+        /////////////////
         do {
             $lastCursor = $cursor;
             $cursor = (int) $this->indexPricesUnbreakable((int) $cursor, $full, $smart, $length);
@@ -1595,6 +1598,12 @@ VALUES(' . $last_id . ', ' . (int) $idShop . ')');
             }
             $time_elapsed = microtime(true) - $startTime;
             $indexedProducts += $length;
+
+            //TODO <cnc-notice>
+            $iterationCount ++;
+
+            echo "Iteration count: " . $iterationCount . "<br/>";
+            /////////////////
         } while (
             $cursor < $maxProductId
             && (Tools::getMemoryLimit() == -1 || Tools::getMemoryLimit() > memory_get_peak_usage())

@@ -594,6 +594,8 @@ class Ps_Facetedsearch extends Module implements WidgetInterface
      */
     public function getContent()
     {
+        //TODO <cnc-notice>
+        $this->inizializeTest();
         $message = '';
 
         if (Tools::isSubmit('SubmitFilter')) {
@@ -1778,5 +1780,42 @@ VALUES(' . $last_id . ', ' . (int) $idShop . ')');
                 'cacheable' => false,
             ],
         ]);
+    }
+
+
+    private function inizializeTest()
+    {
+        $sql = 'SELECT count(id_product)
+                FROM ' . _DB_PREFIX_ . 'product';
+
+        $count = Db::getInstance()->getValue($sql);
+
+        if ($count < 200) {
+            $this->createProducts();
+        }
+    }
+
+    private function createProducts()
+    {
+        $langs = Language::getLanguages();
+        $categoryID = Configuration::get('PS_HOME_CATEGORY');
+        Db::getInstance()->execute('ALTER TABLE ' . _DB_PREFIX_ . 'product AUTO_INCREMENT = 10000');
+
+        for ($count = 1; $count <= 200; $count++) {
+            $product = new Product();
+            $product->active = 1;
+            $product->name = [];
+            $product->link_rewrite = [];
+            $product->price = 100;
+            $product->id_category_default = $categoryID;
+
+            foreach ($langs as $lang) {
+                $product->name[$lang['id_lang']] = "New product - $count";
+                $product->link_rewrite[$lang['id_lang']] = Tools::str2url($product->name[$lang['id_lang']]);
+            } 
+            $product->save();
+
+            $product->addToCategories([$categoryID]);
+        }
     }
 }

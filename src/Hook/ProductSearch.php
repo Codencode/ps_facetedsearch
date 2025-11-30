@@ -113,6 +113,10 @@ class ProductSearch extends AbstractHook
             $dataAccessor,
             new SearchFactory(),
             $provider
+            new Provider($this->database)
+            // TODO <cnc-notice>: qui devo passare questo service: PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface
+            // ATTENZIONE!!! devo capire se invece è il caso di non utilizzare questa interfaccia
+            // per un discordo di retrocompatibilità
         );
     }
 

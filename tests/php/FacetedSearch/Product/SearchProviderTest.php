@@ -152,6 +152,9 @@ class SearchProviderTest extends MockeryTestCase
             new DataAccessor($this->database),
             new SearchFactory(),
             new Provider($this->database)
+            // TODO <cnc-notice>: qui devo passare questo service: PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface
+            // ATTENZIONE!!! devo capire se invece è il caso di non utilizzare questa interfaccia
+            // per un discordo di retrocompatibilità
         );
     }
 

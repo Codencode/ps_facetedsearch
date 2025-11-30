@@ -23,6 +23,7 @@ namespace PrestaShop\Module\FacetedSearch\Product;
 use Configuration;
 use PrestaShop\Module\FacetedSearch\Filters;
 use PrestaShop\Module\FacetedSearch\URLSerializer;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\Facet;
 use PrestaShop\PrestaShop\Core\Product\Search\FacetCollection;
 use PrestaShop\PrestaShop\Core\Product\Search\FacetsRendererInterface;
@@ -66,13 +67,19 @@ class SearchProvider implements FacetsRendererInterface, ProductSearchProviderIn
      */
     private $provider;
 
+    /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
     public function __construct(
         Ps_Facetedsearch $module,
         Filters\Converter $converter,
         URLSerializer $serializer,
         Filters\DataAccessor $dataAccessor,
         SearchFactory $searchFactory,
-        Filters\Provider $provider
+        Filters\Provider $provider,
+        HookDispatcherInterface $hookDispatcher
     ) {
         $this->module = $module;
         $this->filtersConverter = $converter;
@@ -80,6 +87,7 @@ class SearchProvider implements FacetsRendererInterface, ProductSearchProviderIn
         $this->dataAccessor = $dataAccessor;
         $this->searchFactory = $searchFactory;
         $this->provider = $provider;
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
@@ -258,6 +266,15 @@ class SearchProvider implements FacetsRendererInterface, ProductSearchProviderIn
         } elseif ($query->getQueryType() == 'supplier') {
             $filterKey .= $query->getIdSupplier();
         }
+
+        $this->hookDispatcher->dispatchWithParameters(
+            'actionFacetedSearchCacheKeyGeneration',
+            [
+                'filterKey' => &$filterKey,
+                'query' => $query,
+                'facetedSearchFilters' => &$facetedSearchFilters,
+            ]
+        );
 
         $filterHash = md5(
             sprintf(

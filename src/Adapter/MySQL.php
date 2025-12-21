@@ -82,6 +82,10 @@ class MySQL extends AbstractAdapter
      */
     public function execute()
     {
+        //TODO <cnc> >>>>> NOTE ps_facetedsearch <<<<< qui registo il log della query
+        $resource = fopen(_PS_ROOT_DIR_.'/_log', 'a');
+        fwrite($resource, 'QUERY: '. $this->getQuery().PHP_EOL);
+        fclose($resource);
         return $this->getDatabase()->executeS($this->getQuery());
     }
 
@@ -817,6 +821,7 @@ class MySQL extends AbstractAdapter
         $this->setOrderField('');
 
         // We add basic select fields we will need to matter what
+        //TODO <cnc> >>>>> NOTE ps_facetedsearch <<<<< qui vengono aggiunti i campi iniziali per la select
         $this->setSelectFields(
             [
                 'id_product',

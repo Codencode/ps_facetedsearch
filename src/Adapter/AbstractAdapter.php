@@ -222,6 +222,13 @@ abstract class AbstractAdapter implements InterfaceAdapter
      */
     public function addSelectField($fieldName)
     {
+        //TODO <cnc> >>>>> NOTE ps_facetedsearch <<<<<  qui registro il log di aggiunta campo alla select
+        $resource = fopen(_PS_ROOT_DIR_.'/_log', 'a');
+        fwrite($resource, 'FIELD: ' . $fieldName . PHP_EOL);
+        fclose($resource);
+        if ($fieldName == 'COUNT(DISTINCT p.id_product) c') {
+            $f=0;
+        }
         if (!$this->selectFields->contains($fieldName)) {
             $this->selectFields->add($fieldName);
         }

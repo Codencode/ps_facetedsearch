@@ -29,7 +29,10 @@ if (file_exists($autoloadPath)) {
 use PrestaShop\Module\FacetedSearch\Filters\Converter;
 use PrestaShop\Module\FacetedSearch\HookDispatcher;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
-
+/**
+ * //TODO <cnc> >>>>> NOTE ps_facetedsearch <<<<<  PROBLEMA con query che conteggiano milioni di record
+ * Facendo precedere la query da "EXPLAIN" si ottengono dettagli sul numero di righe esaminate
+ */
 class Ps_Facetedsearch extends Module implements WidgetInterface
 {
     /**
